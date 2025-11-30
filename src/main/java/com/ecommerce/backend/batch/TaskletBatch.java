@@ -43,7 +43,7 @@ public class TaskletBatch {
     @Bean
     public Tasklet orderTasklet() {
         return (contribution, chunkContext) -> {
-            log.info("Starting to read all Orders from MongoDB...");
+            log.info("시작Starting to read all Orders from MongoDB...");
 
             List<Order> orders = mongoTemplate.findAll(Order.class);
 
@@ -55,7 +55,7 @@ public class TaskletBatch {
                     // 예: 상태값 변경
                     // order.setStatus("PROCESSED");
 
-                    log.info("Writing Order with ID: {}", order.getId());
+                    log.info("ㅇㅇㅇㅇㅇㅇㅇㅇㅇ: {}", order.getProducts());
                     // 실제 저장 로직
                     // mongoTemplate.save(order);
                 }
