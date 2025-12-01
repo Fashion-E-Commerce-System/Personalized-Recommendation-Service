@@ -1,6 +1,7 @@
 package com.ecommerce.backend.batch;
 
 import com.ecommerce.backend.domain.Order;
+import com.ecommerce.backend.service.CandidateGeneratorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -12,10 +13,16 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Slf4j
 @Configuration
@@ -25,6 +32,7 @@ public class TaskletBatch {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
     private final MongoTemplate mongoTemplate;
+    private final CandidateGeneratorService candidateGeneratorService;
 
     @Bean
     public Job processOrdersJob() {
@@ -43,25 +51,9 @@ public class TaskletBatch {
     @Bean
     public Tasklet orderTasklet() {
         return (contribution, chunkContext) -> {
-            log.info("시작Starting to read all Orders from MongoDB...");
 
-            List<Order> orders = mongoTemplate.findAll(Order.class);
+            candidateGeneratorService.splitData();
 
-            if (orders.isEmpty()) {
-                log.warn("No Orders found in MongoDB.");
-            } else {
-                for (Order order : orders) {
-                    log.info("Processing Order with ID: {}", order.getId());
-                    // 예: 상태값 변경
-                    // order.setStatus("PROCESSED");
-
-                    log.info("ㅇㅇㅇㅇㅇㅇㅇㅇㅇ: {}", order.getProducts());
-                    // 실제 저장 로직
-                    // mongoTemplate.save(order);
-                }
-            }
-
-            log.info("Finished processing Orders.");
             return RepeatStatus.FINISHED;
         };
     }

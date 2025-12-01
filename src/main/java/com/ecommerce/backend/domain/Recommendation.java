@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -19,4 +20,7 @@ public class Recommendation {
     private String id;
     private String username;
     private List<Product> products;
+
+    public Recommendation(String user, Set<String> userOutput) {
+    }
 }
